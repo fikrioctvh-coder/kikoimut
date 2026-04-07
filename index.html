@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Kenangan</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: white;
+  background: #0d0015;
+  position: relative;
+}
+
+/* DEEP DARK BACKGROUND */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, #3d0a5e 0%, #1a0030 40%, #0d0015 100%);
+}
+
+/* STARS CANVAS */
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* FLOATING HEARTS */
+.hearts-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  opacity: 0;
+  animation: floatHeart linear infinite;
+  font-size: 14px;
+  color: rgba(255, 100, 180, 0.4);
+}
+
+@keyframes floatHeart {
+  0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+}
+
+/* SLIDES */
+.slide {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 40px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── SLIDE 1 ── */
+#slide1 .eyebrow {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 18px;
+}
+
+#slide1 h1 {
+  font-size: clamp(42px, 8vw, 80px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+#slide1 h1 span {
+  color: #ff4fa8;
+}
+
+#slide1 .subtitle {
+  font-size: clamp(14px, 2vw, 18px);
+  color: rgba(255,255,255,0.5);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+.btn-primary {
+  padding: 14px 36px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, #e8167a, #c5108e);
+  color: white;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(232, 22, 122, 0.5);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 45px rgba(232, 22, 122, 0.7);
+}
+
+/* ── SLIDE 2 ── */
+#slide2 h1 {
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff6ec4, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+#slide2 .subtitle {
+  color: rgba(255,255,255,0.45);
+  font-size: 14px;
+  margin-bottom: 40px;
+}
+
+.music-container {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 20px;
+  width: 210px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+.card.activeCard {
+  box-shadow: 0 0 30px rgba(255, 110, 196, 0.6);
+  border-color: rgba(255, 110, 196, 0.5);
+}
+
+.cover {
+  width: 100%;
+  height: 130px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.cover1 { background: linear-gradient(135deg, #ff6ec4, #ff3cac); }
+.cover2 { background: linear-gradient(135deg, #7873f5, #ff6ec4); }
+.cover3 { background: linear-gradient(135deg, #ff4e50, #f00000); }
+
+/* LOVE EMOTE DI COVER */
+.cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-heart {
+  font-size: 44px;
+  animation: heartbeat 1.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes heartbeat {
+  0%   { transform: scale(1); }
+  14%  { transform: scale(1.2); }
+  28%  { transform: scale(1); }
+  42%  { transform: scale(1.12); }
+  56%  { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.card p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 14px;
+}
+
+.btn-play {
+  padding: 8px 22px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(90deg, #ff6ec4, #7873f5);
+  color: white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-play:hover { transform: scale(1.05); }
+
+.next-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 40px;
+  z-index: 10;
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.next-btn:hover { color: rgba(255,255,255,0.8); }
+</style>
+</head>
+<body>
+
+<!-- LAYERS -->
+<div class="bg-layer"></div>
+<canvas id="stars-canvas"></canvas>
+<div class="hearts-layer" id="heartsLayer"></div>
+
+<!-- SLIDE 1 -->
+<div class="slide active" id="slide1">
+  <div class="eyebrow">✦ Untuk Kamu ✦</div>
+  <h1>Website Kenangan<br><span>Untuk Kamu dan Dia.</span></h1>
+  <p class="subtitle">Tempat menyimpan cerita, foto, dan lagu favorit kalian berdua.<br>Semua momen spesial tersimpan di sini.</p>
+  <button class="btn-primary" onclick="goToSlide2()">Lihat Cerita Kita</button>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide" id="slide2">
+  <h1>Pilih Lagu 🎶</h1>
+  <p class="subtitle">Semua Lagu Romantis Cocok Buat Kamu</p>
+
+  <div class="music-container">
+    <div class="card" onclick="playSong('perfect')" id="card-perfect">
+      <div class="cover cover1"><span class="cover-heart">❤️</span></div>
+      <h3>Perfect</h3>
+      <p>Ed Sheeran</p>
+      <button class="btn-play" id="btn-perfect">▶ Play</button>
+    </div>
+
+    <div class="card" onclick="playSong('ilysb')" id="card-ilysb">
+      <div class="cover cover2"><span class="cover-heart" style="animation-delay:0.3s">💗</span></div>
+      <h3>ILYSB</h3>
+      <p>LANY</p>
+      <button class="btn-play" id="btn-ilysb">▶ Play</button>
+    </div>
+
+    <div class="card" onclick="playSong('iniabadi')" id="card-iniabadi">
+      <div class="cover cover3"><span class="cover-heart" style="animation-delay:0.6s">💖</span></div>
+      <h3>Ini Abadi</h3>
+      <p>Perunggu</p>
+      <button class="btn-play" id="btn-iniabadi">▶ Play</button>
+    </div>
+  </div>
+</div>
+
+<div class="next-btn" id="nextBtn" style="display:none" onclick="goToSlide1()">← Back</div>
+
+<!-- AUDIO -->
+<audio id="audio-perfect" src="music/perfect.mp3"></audio>
+<audio id="audio-ilysb" src="music/ilysb.mp3"></audio>
+<audio id="audio-iniabadi" src="music/iniabadi.mp3"></audio>
+
+<script>
+/* ── STARS ── */
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 200; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.4 + 0.3,
+      alpha: Math.random(),
+      speed: Math.random() * 0.005 + 0.002,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const a = 0.3 + 0.5 * Math.abs(Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+resizeCanvas();
+initStars();
+requestAnimationFrame(drawStars);
+window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+
+/* ── HEARTS ── */
+const heartsLayer = document.getElementById('heartsLayer');
+const HEARTS = ['♥','❤','💕','💗'];
+
+function spawnHeart() {
+  const el = document.createElement('span');
+  el.className = 'heart';
+  el.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+  el.style.left = Math.random() * 100 + 'vw';
+  el.style.bottom = '-30px';
+  el.style.fontSize = (10 + Math.random() * 14) + 'px';
+  const dur = 8 + Math.random() * 6;
+  el.style.animationDuration = dur + 's';
+  el.style.animationDelay = Math.random() * 4 + 's';
+  heartsLayer.appendChild(el);
+  setTimeout(() => el.remove(), (dur + 4) * 1000);
+}
+
+setInterval(spawnHeart, 800);
+
+/* ── SLIDES ── */
+function goToSlide2() {
+  document.getElementById('slide1').classList.remove('active');
+  setTimeout(() => {
+    document.getElementById('slide2').classList.add('active');
+    document.getElementById('nextBtn').style.display = 'block';
+  }, 400);
+}
+
+function goToSlide1() {
+  document.getElementById('slide2').classList.remove('active');
+  document.getElementById('nextBtn').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('slide1').classList.add('active');
+  }, 400);
+}
+
+/* ── MUSIC ── */
+const songs = {
+  perfect: document.getElementById('audio-perfect'),
+  ilysb: document.getElementById('audio-ilysb'),
+  iniabadi: document.getElementById('audio-iniabadi')
+};
+
+function playSong(name) {
+  for (let key in songs) {
+    songs[key].pause();
+    songs[key].currentTime = 0;
+    document.getElementById('btn-' + key).textContent = '▶ Play';
+    document.getElementById('card-' + key).classList.remove('activeCard');
+  }
+  songs[name].play();
+  document.getElementById('btn-' + name).textContent = '⏸ Playing...';
+  document.getElementById('card-' + name).classList.add('activeCard');
+}
+</script>
+</body>
+</html>
