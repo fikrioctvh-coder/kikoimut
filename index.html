@@ -1,241 +1,619 @@
+Berikut adalah kode yang telah diubah untuk slide 6-9 menggunakan tombol navigasi up/down yang lucu dan romantis, tanpa scroll dan tanpa bisa kembali ke slide 5.
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website Kenangan</title>
-
+<title>Hai Chella - Romantic Story</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
-
 <style>
-* {margin:0;padding:0;box-sizing:border-box;}
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  overflow: hidden;
-  color: white;
-  background: radial-gradient(circle at center, #2a0a3d, #0a0615);
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; color: white; background: #0d0015; position: relative; }
+
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, #3d0a5e 0%, #1a0030 40%, #0d0015 100%);
+}
+#stars-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.hearts-layer { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.heart {
+  position: absolute; opacity: 0; animation: floatHeart linear infinite;
+  font-size: 14px; color: rgba(255,100,180,0.4);
+}
+@keyframes floatHeart {
+  0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
 }
 
-/* BINTANG */
-body::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  background:url('https://www.transparenttextures.com/patterns/stardust.png');
-  opacity:0.25;
-}
-
-/* SLIDE */
+/* ===== TRANSISI ROMANTIS FADE + BLUR (CEPAT & SMOOTH) ===== */
 .slide {
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  text-align:center;
-  opacity:0;
-  pointer-events:none;
-  transition:0.8s;
+  position: fixed; inset: 0; z-index: 3;
+  display: flex; justify-content: center; align-items: center;
+  flex-direction: column; text-align: center; padding: 40px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), filter 0.55s ease;
+  filter: blur(10px);
 }
-
 .slide.active {
-  opacity:1;
-  pointer-events:all;
+  opacity: 1;
+  pointer-events: all;
+  filter: blur(0px);
+}
+/* Kelas untuk transisi keluar */
+.slide.exit {
+  opacity: 0;
+  filter: blur(10px);
+  pointer-events: none;
 }
 
-/* SLIDE 1 */
-#slide1 h1 {
-  font-size:50px;
-  background: linear-gradient(90deg,#ff6ec4,#a78bfa);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+/* ===== SLIDE 1 ===== */
+#slide1 .eyebrow { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 18px; }
+#slide1 h1 { font-size: clamp(42px,8vw,80px); font-weight: 800; line-height: 1.1; color: #fff; margin-bottom: 10px; }
+#slide1 h1 span { color: #ff4fa8; }
+#slide1 .subtitle { font-size: clamp(14px,2vw,18px); color: rgba(255,255,255,0.5); max-width: 480px; line-height: 1.7; margin-bottom: 36px; }
+.btn-primary { padding: 14px 36px; border-radius: 50px; border: none; background: linear-gradient(135deg,#e8167a,#c5108e); color: white; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 0 30px rgba(232,22,122,0.5); transition: transform 0.2s, box-shadow 0.2s; }
+.btn-primary:hover { transform: scale(1.06); box-shadow: 0 0 45px rgba(232,22,122,0.7); }
+
+/* ===== SLIDE 2 ===== */
+#slide2 h1 { font-size: clamp(28px,5vw,46px); font-weight: 800; background: linear-gradient(90deg,#ff6ec4,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+#slide2 .subtitle { color: rgba(255,255,255,0.45); font-size: 14px; margin-bottom: 40px; }
+.music-container { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+.card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; width: 210px; backdrop-filter: blur(12px); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; text-align: center; }
+.card:hover { transform: translateY(-8px) scale(1.03); }
+.card.activeCard { box-shadow: 0 0 30px rgba(255,110,196,0.6); border-color: rgba(255,110,196,0.5); }
+.cover { width: 100%; height: 130px; border-radius: 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; }
+.cover1 { background: linear-gradient(135deg,#ff6ec4,#ff3cac); }
+.cover2 { background: linear-gradient(135deg,#7873f5,#ff6ec4); }
+.cover3 { background: linear-gradient(135deg,#ff4e50,#f00000); }
+.cover-heart { font-size: 44px; animation: heartbeat 1.6s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); user-select: none; }
+@keyframes heartbeat { 0%{transform:scale(1)} 14%{transform:scale(1.2)} 28%{transform:scale(1)} 42%{transform:scale(1.12)} 56%{transform:scale(1)} 100%{transform:scale(1)} }
+.card h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.card p  { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+.btn-play { padding: 8px 22px; border-radius: 30px; border: none; background: linear-gradient(90deg,#ff6ec4,#7873f5); color: white; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+.btn-play:hover { transform: scale(1.05); }
+
+.back-btn { position: fixed; bottom: 30px; left: 40px; z-index: 10; color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer; transition: color 0.2s; }
+.back-btn:hover { color: rgba(255,255,255,0.8); }
+.next-btn-s2 { position: fixed; bottom: 30px; right: 40px; z-index: 10; color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer; transition: color 0.2s; }
+.next-btn-s2:hover { color: rgba(255,255,255,0.8); }
+
+/* ===== SLIDE 3 ===== */
+#slide3 { flex-direction: row; align-items: center; justify-content: center; gap: 60px; padding: 40px 60px; text-align: left; }
+.s3-text { max-width: 400px; }
+.s3-chapter { display: inline-flex; align-items: center; gap: 6px; background: rgba(232,22,122,0.18); border: 1px solid rgba(232,22,122,0.4); border-radius: 30px; padding: 5px 16px; font-size: 12px; font-weight: 700; color: #ff6ec4; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 22px; }
+.s3-chapter::before { content: '♥'; font-size: 11px; }
+.s3-text h2 { font-size: clamp(26px,4vw,44px); font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 16px; }
+.s3-text h2 em { font-style: normal; color: #ff6ec4; }
+.s3-text .body-text { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.8; max-width: 340px; }
+.s3-photo-wrap { position: relative; flex-shrink: 0; }
+.s3-glow { position: absolute; inset: -24px; border-radius: 40px; background: radial-gradient(ellipse 80% 80% at 50% 50%,rgba(232,22,122,0.2) 0%,transparent 70%); z-index: -1; animation: glowPulse 4s ease-in-out infinite; }
+@keyframes glowPulse { 0%,100%{opacity:0.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.06)} }
+.s3-photo-card { border-radius: 24px; overflow: hidden; border: 1.5px solid rgba(255,110,196,0.3); box-shadow: 0 0 60px rgba(200,20,120,0.2),0 0 0 1px rgba(255,255,255,0.04); animation: photoFloat 5s ease-in-out infinite; display: inline-block; max-width: 280px; }
+@keyframes photoFloat { 0%,100%{transform:translateY(0px) rotate(-0.8deg)} 50%{transform:translateY(-10px) rotate(0.8deg)} }
+.s3-photo-card img { width: 100%; height: auto; display: block; filter: brightness(1.05) saturate(1.1); }
+.next-s3 { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.8s ease; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); cursor: pointer; }
+.next-s3.visible { opacity: 1; pointer-events: all; }
+.next-s3:hover { color: rgba(255,255,255,0.9); }
+.next-s3 .arrow-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,110,196,0.4); background: rgba(232,22,122,0.12); animation: arrowPulse 1.8s ease-in-out infinite; font-size: 14px; color: #ff6ec4; }
+@keyframes arrowPulse { 0%,100%{transform:translateX(0);box-shadow:0 0 0 rgba(232,22,122,0)} 50%{transform:translateX(4px);box-shadow:0 0 12px rgba(232,22,122,0.4)} }
+
+/* ===== SLIDE 4 ===== */
+#slide4 { overflow: hidden; }
+#slide4 h2 { font-size: clamp(20px,3.2vw,36px); font-weight: 800; background: linear-gradient(90deg,#ff6ec4,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.3; margin-bottom: 10px; max-width: 640px; }
+#slide4 .subtitle { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 36px; letter-spacing: 0.3px; }
+.distance-row { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 28px; position: relative; }
+.location-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px 32px; min-width: 170px; backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; z-index: 2; animation: cardBreath 4s ease-in-out infinite; }
+.location-card:first-child { animation-delay: 0s; }
+.location-card:last-child  { animation-delay: 0.6s; }
+@keyframes cardBreath { 0%,100%{box-shadow:0 0 0 rgba(232,22,122,0);border-color:rgba(255,255,255,0.1)} 50%{box-shadow:0 0 20px rgba(232,22,122,0.2);border-color:rgba(255,110,196,0.3)} }
+.pin-icon { width: 26px; height: 26px; }
+.location-card .label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; }
+.center-symbol { width: 140px; height: 110px; display: flex; align-items: center; justify-content: center; position: relative; margin: 0 -6px; flex-shrink: 0; z-index: 1; }
+.connector-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; transform: translateY(-50%); background: linear-gradient(90deg,transparent 0%,rgba(255,110,196,0.3) 20%,rgba(255,110,196,0.6) 50%,rgba(167,139,250,0.6) 50%,rgba(167,139,250,0.3) 80%,transparent 100%); animation: lineShimmer 2.5s ease-in-out infinite; pointer-events: none; }
+@keyframes lineShimmer { 0%,100%{opacity:0.4} 50%{opacity:1} }
+.travel-heart { position: absolute; top: 50%; font-size: 12px; transform: translateY(-50%); animation: travelAcross 3s ease-in-out infinite; filter: drop-shadow(0 0 6px rgba(255,110,196,0.9)); z-index: 5; }
+@keyframes travelAcross { 0%{left:5%;opacity:0;transform:translateY(-50%) scale(0.7)} 10%{opacity:1} 50%{transform:translateY(-50%) scale(1.1)} 90%{opacity:1} 100%{left:85%;opacity:0;transform:translateY(-50%) scale(0.7)} }
+.travel-heart:nth-child(3) { animation-delay: 1.5s; font-size: 9px; }
+.center-symbol svg.cross-svg { animation: crossWobble 3s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(255,110,196,0.8)) drop-shadow(0 0 18px rgba(167,139,250,0.5)); position: relative; z-index: 3; }
+@keyframes crossWobble { 0%{transform:scale(1) rotate(0deg);opacity:0.85} 20%{transform:scale(1.04) rotate(1.5deg);opacity:1} 40%{transform:scale(1) rotate(-1deg);opacity:0.9} 60%{transform:scale(1.03) rotate(0.8deg);opacity:1} 80%{transform:scale(1) rotate(-0.5deg);opacity:0.85} 100%{transform:scale(1) rotate(0deg);opacity:0.85} }
+.ring { position: absolute; border-radius: 50%; border: 1px solid rgba(255,110,196,0.15); animation: ringExpand 3.5s ease-in-out infinite; pointer-events: none; }
+.ring1 { width:70px; height:70px; animation-delay:0s; }
+.ring2 { width:92px; height:92px; animation-delay:0.5s; border-color:rgba(167,139,250,0.1); }
+.ring3 { width:110px; height:110px; animation-delay:1s; border-color:rgba(255,110,196,0.06); }
+@keyframes ringExpand { 0%,100%{transform:scale(1);opacity:0.4} 50%{transform:scale(1.1);opacity:0.9} }
+.deco-hearts-s4 { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.dh { position: absolute; opacity: 0; animation: decoFloat linear infinite; font-size: 11px; filter: drop-shadow(0 0 4px rgba(255,110,196,0.5)); }
+@keyframes decoFloat { 0%{transform:translateY(10px) scale(0.7);opacity:0} 10%{opacity:0.55} 85%{opacity:0.3} 100%{transform:translateY(-120px) scale(1.1);opacity:0} }
+.sparkle { position: absolute; border-radius: 50%; background: radial-gradient(circle,#ff6ec4,transparent); animation: sparklePop ease-in-out infinite; pointer-events: none; }
+@keyframes sparklePop { 0%,100%{transform:scale(0);opacity:0} 50%{transform:scale(1);opacity:0.7} }
+.quote-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 28px; max-width: 500px; font-size: 13px; font-style: italic; color: rgba(255,255,255,0.35); margin-bottom: 32px; letter-spacing: 0.2px; position: relative; z-index: 2; }
+.next-s4-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; z-index: 2; }
+.next-s4 { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,110,196,0.25); border-radius: 30px; padding: 9px 22px; background: rgba(232,22,122,0.07); }
+.next-s4:hover { color: #fff; border-color: rgba(255,110,196,0.6); background: rgba(232,22,122,0.15); }
+.next-s4 .arrow-s4 { font-size: 13px; color: #ff6ec4; animation: arrowPulse2 1.8s ease-in-out infinite; display: inline-block; }
+@keyframes arrowPulse2 { 0%,100%{transform:translateX(0)} 50%{transform:translateX(5px)} }
+.countdown-bar-wrap { width: 140px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+.countdown-bar { height: 100%; width: 100%; background: linear-gradient(90deg,#ff6ec4,#a78bfa); border-radius: 10px; transform-origin: left; }
+@keyframes countdownShrink { from{transform:scaleX(1)} to{transform:scaleX(0)} }
+
+/* ===== SLIDE 5 ===== */
+#slide5 { background: radial-gradient(ellipse 90% 70% at 50% 60%,#1a0a2e 0%,#0a0018 50%,#05000f 100%); }
+#slide5::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse 40% 30% at 20% 80%,rgba(120,40,180,0.18) 0%,transparent 70%), radial-gradient(ellipse 35% 25% at 80% 20%,rgba(200,60,140,0.12) 0%,transparent 70%); pointer-events:none; }
+.s5-petal-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+@keyframes petalRise { 0%{transform:translateY(0) rotate(0deg) scale(0.8);opacity:0} 8%{opacity:0.6} 85%{opacity:0.35} 100%{transform:translateY(-110vh) rotate(20deg) scale(1.1);opacity:0} }
+#slide5 .s5-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+#slide5 h2 { font-size: clamp(26px,4.5vw,52px); font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 6px; max-width: 620px; }
+#slide5 h2 .pink   { color: #ff6ec4; }
+#slide5 h2 .purple { color: #c084fc; }
+.s5-hint { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 36px; }
+.s5-memory-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,110,196,0.2); border-radius: 20px; padding: 36px 48px; max-width: 520px; backdrop-filter: blur(16px); box-shadow: 0 0 60px rgba(180,40,120,0.1),inset 0 0 30px rgba(255,255,255,0.02); display: flex; flex-direction: column; align-items: center; gap: 18px; position: relative; overflow: hidden; }
+.s5-memory-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,110,196,0.04) 0%,transparent 50%,rgba(167,139,250,0.04) 100%); pointer-events:none; }
+.heart-btn { width:60px; height:60px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+.heart-btn:active { transform: scale(0.9); }
+.heart-btn-inner { font-size:38px; line-height:1; animation:heartbeatBtn 2s ease-in-out infinite; filter:drop-shadow(0 0 12px rgba(255,110,196,0.8)); display:block; }
+@keyframes heartbeatBtn { 0%{transform:scale(1)} 14%{transform:scale(1.22)} 28%{transform:scale(1)} 42%{transform:scale(1.12)} 56%{transform:scale(1)} 100%{transform:scale(1)} }
+.heart-btn-ring  { position:absolute; inset:-4px;  border-radius:50%; border:1.5px solid rgba(255,110,196,0.3); animation:ringPulseBtn 2s ease-in-out infinite; }
+.heart-btn-ring2 { position:absolute; inset:-12px; border-radius:50%; border:1px solid rgba(255,110,196,0.12); animation:ringPulseBtn 2s ease-in-out infinite 0.4s; }
+@keyframes ringPulseBtn { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.15);opacity:1} }
+.s5-memory-text { font-size:14px; line-height:1.85; color:rgba(255,255,255,0.55); max-width:380px; text-align:center; }
+.s5-footer { margin-top:28px; font-size:11px; color:rgba(255,255,255,0.2); letter-spacing:1px; display:flex; align-items:center; gap:6px; }
+.s5-footer span { color:#ff6ec4; }
+.s5-corner { position:absolute; font-size:22px; opacity:0.12; pointer-events:none; animation:cornerBreath 5s ease-in-out infinite; }
+.s5-corner.tl { top:24px; left:28px; animation-delay:0s; }
+.s5-corner.tr { top:24px; right:28px; animation-delay:1s; }
+.s5-corner.bl { bottom:24px; left:28px; animation-delay:2s; }
+.s5-corner.br { bottom:24px; right:28px; animation-delay:3s; }
+@keyframes cornerBreath { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.22;transform:scale(1.08)} }
+
+/* ===== GALLERY SLIDES 6–9 ===== */
+.gallery-slide {
+  background: radial-gradient(ellipse 100% 80% at 50% 50%,#120022 0%,#080010 55%,#030008 100%);
+  padding: 0; overflow: hidden;
+}
+.gallery-slide::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(ellipse 50% 35% at 10% 90%,rgba(100,20,160,0.18) 0%,transparent 65%),
+              radial-gradient(ellipse 40% 30% at 90% 15%,rgba(190,50,130,0.13) 0%,transparent 65%);
 }
 
-.btn {
-  margin-top:25px;
-  padding:12px 30px;
-  border:none;
-  border-radius:30px;
-  background:linear-gradient(90deg,#ff6ec4,#7873f5);
-  color:white;
+.gallery-content {
+  width:100%; height:100%;
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:60px 20px 80px;
+}
+
+.gallery-chapter { display:inline-flex; align-items:center; gap:7px; background:rgba(232,22,122,0.14); border:1px solid rgba(232,22,122,0.35); border-radius:30px; padding:5px 18px; font-size:11px; font-weight:700; color:#ff6ec4; letter-spacing:2px; text-transform:uppercase; margin-bottom:18px; }
+.gallery-chapter::before { content:'♥'; font-size:10px; }
+.gallery-title { font-size:clamp(22px,3.5vw,40px); font-weight:800; color:#fff; line-height:1.2; margin-bottom:8px; text-align:center; max-width:560px; }
+.gallery-title em { font-style:normal; color:#ff6ec4; }
+.gallery-subtitle { font-size:12px; color:rgba(255,255,255,0.35); margin-bottom:36px; letter-spacing:0.5px; }
+
+.photo-row { display:flex; gap:18px; justify-content:center; align-items:stretch; width:100%; max-width:900px; margin-bottom:14px; flex-wrap:nowrap; }
+
+.photo-frame {
+  flex:1; min-width:0; max-width:280px; position:relative;
+  border-radius:18px; overflow:hidden;
+  border:1.5px solid rgba(255,110,196,0.2);
+  box-shadow:0 0 30px rgba(200,40,130,0.15),0 0 60px rgba(140,40,200,0.08),0 0 0 1px rgba(255,255,255,0.03);
+  transition:transform 0.35s ease, box-shadow 0.35s ease;
+  animation:photoFrameGlow 5s ease-in-out infinite;
   cursor:pointer;
 }
-
-/* SLIDE 2 */
-.music-container {
-  display:flex;
-  gap:25px;
-  margin-top:30px;
+.photo-frame:nth-child(2) { animation-delay:1.2s; }
+.photo-frame:nth-child(3) { animation-delay:2.4s; }
+@keyframes photoFrameGlow {
+  0%,100%{ box-shadow:0 0 20px rgba(200,40,130,0.12),0 0 50px rgba(140,40,200,0.06); border-color:rgba(255,110,196,0.2); }
+  50%    { box-shadow:0 0 38px rgba(255,110,196,0.38),0 0 70px rgba(167,139,250,0.2); border-color:rgba(255,110,196,0.55); }
 }
+.photo-frame:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 0 55px rgba(255,110,196,0.48),0 0 90px rgba(167,139,250,0.22); }
+.photo-frame img { width:100%; height:200px; object-fit:cover; display:block; filter:brightness(0.95) saturate(1.1); transition:filter 0.3s; }
+.photo-frame:hover img { filter:brightness(1.05) saturate(1.2); }
 
-.card {
-  background:rgba(255,255,255,0.05);
-  padding:20px;
-  border-radius:20px;
-  width:200px;
-  cursor:pointer;
-  transition:0.3s;
+.photo-caption { font-size:11px; color:rgba(255,255,255,0.22); letter-spacing:1.5px; text-align:center; margin-bottom:32px; }
+
+.gallery-deco { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+.gdh { position:absolute; opacity:0; animation:decoFloat linear infinite; pointer-events:none; }
+
+.gallery-heart-cta { display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:24px; padding-bottom:20px; }
+.gallery-heart-cta .cta-hint { font-size:11px; color:rgba(255,255,255,0.28); letter-spacing:1px; }
+.gallery-heart-btn { width:56px; height:56px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+.gallery-heart-btn:active { transform:scale(0.88); }
+.gallery-heart-btn .ghb-inner { font-size:34px; filter:drop-shadow(0 0 14px rgba(255,110,196,0.9)); animation:heartbeatBtn 2s ease-in-out infinite; display:block; }
+.gallery-heart-btn .ghb-ring  { position:absolute; inset:-5px;  border-radius:50%; border:1.5px solid rgba(255,110,196,0.28); animation:ringPulseBtn 2s ease-in-out infinite; }
+.gallery-heart-btn .ghb-ring2 { position:absolute; inset:-14px; border-radius:50%; border:1px solid rgba(255,110,196,0.1); animation:ringPulseBtn 2s ease-in-out infinite 0.5s; }
+
+/* Tombol Navigasi Gallery yang Lucu dan Romantis */
+.gallery-nav {
+  position: fixed;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
 }
-
-.card:hover {transform:translateY(-8px);}
-
-.cover {
-  height:120px;
-  border-radius:12px;
-  margin-bottom:10px;
+.gallery-nav-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255,110,196,0.15);
+  border: 1.5px solid rgba(255,110,196,0.4);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s ease;
+  animation: btnGlow 2s ease-in-out infinite;
 }
-
-.cover1 {background:linear-gradient(135deg,#ff6ec4,#ff3cac);}
-.cover2 {background:linear-gradient(135deg,#7873f5,#ff6ec4);}
-.cover3 {background:linear-gradient(135deg,#ff4e50,#f00000);}
-
-/* SLIDE 3 */
-.story-container {
-  display:flex;
-  gap:60px;
-  align-items:center;
+.gallery-nav-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255,110,196,0.35);
+  border-color: rgba(255,110,196,0.8);
+  box-shadow: 0 0 20px rgba(255,110,196,0.5);
 }
-
-.story-left {
-  text-align:left;
-  max-width:350px;
+.gallery-nav-btn:active {
+  transform: scale(0.95);
 }
-
-.chapter {
-  font-size:12px;
-  color:rgba(255,255,255,0.4);
-  margin-bottom:10px;
+@keyframes btnGlow {
+  0%,100% { box-shadow: 0 0 5px rgba(255,110,196,0.3); }
+  50% { box-shadow: 0 0 15px rgba(255,110,196,0.6); }
 }
-
-.story-left h2 {
-  font-size:28px;
-  font-weight:800;
+.nav-up { margin-bottom: 5px; }
+.nav-down { margin-top: 5px; }
+.nav-label {
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
+.gallery-nav.hide { display: none; }
 
-.desc {
-  font-size:14px;
-  color:rgba(255,255,255,0.5);
-  margin-top:10px;
-}
+/* nav dots */
+.scroll-nav { position:fixed; right:22px; top:50%; transform:translateY(-50%); z-index:20; display:none; flex-direction:column; gap:9px; align-items:center; }
+.scroll-nav.visible { display:flex; }
+.snav-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:all 0.3s; }
+.snav-dot.act { background:#ff6ec4; box-shadow:0 0 8px rgba(255,110,196,0.8); transform:scale(1.35); }
 
-.story-img {
-  width:280px;
-  border-radius:20px;
-  box-shadow:0 0 40px rgba(255,110,196,0.3);
-  animation:float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-12px);}
-  100%{transform:translateY(0);}
-}
-
-.next-btn {
-  position:absolute;
-  bottom:30px;
-  right:40px;
-  opacity:0.6;
-  cursor:pointer;
+@media (max-width:700px) {
+  #slide3 { flex-direction:column; text-align:center; padding:40px 24px; gap:28px; }
+  .s3-text { max-width:100%; }
+  .s3-text .body-text { max-width:100%; }
+  .s3-photo-card { max-width:220px; }
+  .distance-row { gap:4px; }
+  .location-card { padding:14px 18px; min-width:120px; }
+  .center-symbol { width:100px; height:80px; }
+  .photo-row { gap:8px; }
+  .photo-frame img { height:110px; }
+  .gallery-nav { right: 12px; }
+  .gallery-nav-btn { width: 42px; height: 42px; font-size: 20px; }
 }
 </style>
 </head>
-
 <body>
+
+<div class="bg-layer"></div>
+<canvas id="stars-canvas"></canvas>
+<div class="hearts-layer" id="heartsLayer"></div>
 
 <!-- SLIDE 1 -->
 <div class="slide active" id="slide1">
-  <h1>Website Kenangan</h1>
-  <p>Untuk Kamu dan Dia</p>
-  <button class="btn" onclick="goToSlide2()">Mulai</button>
+  <div class="eyebrow">✦ us ✦</div>
+  <h1>Hai Chella<br><span>A story that never fades</span></h1>
+  <p class="subtitle">And you need to know you're the only one.<br>-Lany.</p>
+  <button class="btn-primary" onclick="nav(0,1)">Lets Start</button>
 </div>
 
 <!-- SLIDE 2 -->
 <div class="slide" id="slide2">
   <h1>Pilih Lagu 🎶</h1>
-
+  <p class="subtitle">every love story deserves its own movie and every movie has its own soundtrack</p>
   <div class="music-container">
-    <div class="card" onclick="playSong('perfect')">
-      <div class="cover cover1"></div>
-      <h3>Perfect</h3>
-      <p>Ed Sheeran</p>
+    <div class="card" onclick="playSong('perfect')" id="card-perfect">
+      <div class="cover cover1"><span class="cover-heart">❤️</span></div>
+      <h3>Perfect</h3><p>Ed Sheeran</p>
+      <button class="btn-play" id="btn-perfect">▶ Play</button>
     </div>
-
-    <div class="card" onclick="playSong('ilysb')">
-      <div class="cover cover2"></div>
-      <h3>ILYSB</h3>
-      <p>LANY</p>
+    <div class="card" onclick="playSong('ilysb')" id="card-ilysb">
+      <div class="cover cover2"><span class="cover-heart" style="animation-delay:.3s">💗</span></div>
+      <h3>ILYSB</h3><p>LANY</p>
+      <button class="btn-play" id="btn-ilysb">▶ Play</button>
     </div>
-
-    <div class="card" onclick="playSong('iniabadi')">
-      <div class="cover cover3"></div>
-      <h3>Ini Abadi</h3>
-      <p>Perunggu</p>
+    <div class="card" onclick="playSong('iniabadi')" id="card-iniabadi">
+      <div class="cover cover3"><span class="cover-heart" style="animation-delay:.6s">💖</span></div>
+      <h3>Ini Abadi</h3><p>Perunggu</p>
+      <button class="btn-play" id="btn-iniabadi">▶ Play</button>
     </div>
   </div>
-
-  <div class="next-btn" onclick="goToSlide3()">Next →</div>
 </div>
 
 <!-- SLIDE 3 -->
 <div class="slide" id="slide3">
-
-  <div class="story-container">
-
-    <div class="story-left">
-      <div class="chapter">Chapter 1</div>
-      <h2>This is where the story begins</h2>
-      <p class="desc">A simple start, with a lasting meaning</p>
-    </div>
-
-    <div class="story-right">
-      <img src="fotoig.jpeg" class="story-img">
-    </div>
-
+  <div class="s3-text">
+    <span class="s3-chapter">Chapter #1</span>
+    <h2>This is where<br>the story <em>begins</em> 🌙</h2>
+    <p class="body-text">A simple start, with a lasting meaning.</p>
   </div>
-
-  <div class="next-btn" id="next3" style="display:none">
-    Next →
+  <div class="s3-photo-wrap">
+    <div class="s3-glow"></div>
+    <div class="s3-photo-card"><img src="chella.jpeg" alt="Chella"/></div>
   </div>
+</div>
 
+<!-- SLIDE 4 -->
+<div class="slide" id="slide4">
+  <div class="deco-hearts-s4" id="decoHeartsS4"></div>
+  <h2>Wherever you are<br>were still under the same sky.</h2>
+  <p class="subtitle">Ill always be there for you</p>
+  <div class="distance-row">
+    <div class="location-card">
+      <svg class="pin-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="#e8167a" stroke-width="1.5" fill="none"/><circle cx="12" cy="9" r="2.5" stroke="#e8167a" stroke-width="1.5" fill="none"/></svg>
+      <div class="label">Kamu — Disana 🌸</div>
+    </div>
+    <div class="center-symbol">
+      <div class="ring ring1"></div><div class="ring ring2"></div><div class="ring ring3"></div>
+      <div class="connector-line"></div>
+      <span class="travel-heart">💗</span><span class="travel-heart">💕</span>
+      <svg class="cross-svg" width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff6ec4"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient>
+          <linearGradient id="g2" x1="72" y1="0" x2="0" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#ff6ec4"/></linearGradient>
+        </defs>
+        <path d="M14 14 C 22 28,36 36,58 58" stroke="url(#g1)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <path d="M58 14 C 46 28,36 36,14 58" stroke="url(#g2)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="36" r="3.5" fill="url(#g1)" opacity="0.9"/>
+      </svg>
+      <div class="sparkle" style="width:5px;height:5px;top:18%;left:22%;animation-duration:2.1s;"></div>
+      <div class="sparkle" style="width:4px;height:4px;top:70%;left:68%;animation-duration:2.8s;animation-delay:.7s;"></div>
+      <div class="sparkle" style="width:3px;height:3px;top:40%;left:78%;animation-duration:1.9s;animation-delay:1.2s;"></div>
+      <div class="sparkle" style="width:5px;height:5px;top:62%;left:18%;animation-duration:2.4s;animation-delay:.4s;"></div>
+    </div>
+    <div class="location-card">
+      <svg class="pin-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="#e8167a" stroke-width="1.5" fill="none"/><circle cx="12" cy="9" r="2.5" stroke="#e8167a" stroke-width="1.5" fill="none"/></svg>
+      <div class="label">Aku — Disini 🖤</div>
+    </div>
+  </div>
+  <div class="quote-box">"Distance means so little when someone means so much"</div>
+  <div class="next-s4-wrap">
+    <div class="next-s4" onclick="cancelAuto();nav(3,4)">Next <span class="arrow-s4">→</span></div>
+    <div class="countdown-bar-wrap"><div class="countdown-bar" id="countdownBar"></div></div>
+  </div>
+</div>
+
+<!-- SLIDE 5 -->
+<div class="slide" id="slide5">
+  <div class="s5-petal-layer" id="s5PetalLayer"></div>
+  <span class="s5-corner tl">🌸</span><span class="s5-corner tr">🌺</span>
+  <span class="s5-corner bl">✿</span><span class="s5-corner br">🌸</span>
+  <div class="s5-content">
+    <h2>Setiap kenangan kita<br>tersimpan <span class="pink">di sini,</span><br><span class="purple">selamanya</span></h2>
+    <p class="s5-hint">tekan tombol hati untuk lanjut</p>
+    <div class="s5-memory-card">
+      <button class="heart-btn" onclick="nav(4,5)">
+        <div class="heart-btn-ring"></div><div class="heart-btn-ring2"></div>
+        <span class="heart-btn-inner">🩷</span>
+      </button>
+      <p class="s5-memory-text">Terimakasih babe udah mau sama aku<br>AKU SAYANG KAMU BUBIII</p>
+    </div>
+    <div class="s5-footer">Made with <span>♥</span> for us</div>
+  </div>
+</div>
+
+<!-- GALLERY SLIDE 6 — foto 1,2,3 -->
+<div class="slide gallery-slide" id="slide6">
+  <div class="gallery-deco" id="gdeco6"></div>
+  <div class="gallery-content">
+    <span class="gallery-chapter">Galeri kita</span>
+    <h2 class="gallery-title">Galeri kita <em>lucu sekali</em></h2>
+    <p class="gallery-subtitle">Lucu ya kita 🌸</p>
+    <div class="photo-row">
+      <div class="photo-frame"><img src="foto1.jpeg" alt="foto 1" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto2.jpeg" alt="foto 2" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto3.jpeg" alt="foto 3" loading="lazy"></div>
+    </div>
+    <p class="photo-caption">✦ &nbsp; Love u babe &nbsp; ✦</p>
+  </div>
+</div>
+
+<!-- GALLERY SLIDE 7 — foto 4,5,6 -->
+<div class="slide gallery-slide" id="slide7">
+  <div class="gallery-deco" id="gdeco7"></div>
+  <div class="gallery-content">
+    <span class="gallery-chapter">Galeri kita</span>
+    <h2 class="gallery-title">Kamu selalu <em>lucuu</em></h2>
+    <p class="gallery-subtitle">Gemes bangettt 💗</p>
+    <div class="photo-row">
+      <div class="photo-frame"><img src="foto4.jpeg" alt="foto 4" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto5.jpeg" alt="foto 5" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto6.jpeg" alt="foto 6" loading="lazy"></div>
+    </div>
+    <p class="photo-caption">✦ &nbsp; Love u babe &nbsp; ✦</p>
+  </div>
+</div>
+
+<!-- GALLERY SLIDE 8 — foto 7,8,9 -->
+<div class="slide gallery-slide" id="slide8">
+  <div class="gallery-deco" id="gdeco8"></div>
+  <div class="gallery-content">
+    <span class="gallery-chapter">Galeri kita</span>
+    <h2 class="gallery-title">Aku selalu <em>sayang sama kamu</em></h2>
+    <p class="gallery-subtitle">Aku mau disamping kamu terus bubib ✨</p>
+    <div class="photo-row">
+      <div class="photo-frame"><img src="foto7.jpeg" alt="foto 7" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto8.jpeg" alt="foto 8" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto9.jpeg" alt="foto 9" loading="lazy"></div>
+    </div>
+    <p class="photo-caption">✦ &nbsp; Love u babe &nbsp; ✦</p>
+  </div>
+</div>
+
+<!-- GALLERY SLIDE 9 — foto 10,11,12 -->
+<div class="slide gallery-slide" id="slide9">
+  <div class="gallery-deco" id="gdeco9"></div>
+  <div class="gallery-content">
+    <span class="gallery-chapter">Galeri kita</span>
+    <h2 class="gallery-title">Dan masih banyak lagi <em>kenangan</em> yang menunggu</h2>
+    <p class="gallery-subtitle">Ini baru permulaan dari segalanya 💖</p>
+    <div class="photo-row">
+      <div class="photo-frame"><img src="foto10.jpeg" alt="foto 10" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto11.jpeg" alt="foto 11" loading="lazy"></div>
+      <div class="photo-frame"><img src="foto12.jpeg" alt="foto 12" loading="lazy"></div>
+    </div>
+    <p class="photo-caption">✦ &nbsp; Love u babe &nbsp; ✦</p>
+    <div class="gallery-heart-cta">
+      <p class="cta-hint">tekan tombol hati untuk lanjut</p>
+      <button class="gallery-heart-btn" onclick="nav(8,9)">
+        <div class="ghb-ring"></div><div class="ghb-ring2"></div>
+        <span class="ghb-inner">🩷</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Tombol Navigasi Gallery Up & Down -->
+<div class="gallery-nav" id="galleryNav">
+  <div class="nav-label">✨</div>
+  <div class="gallery-nav-btn nav-up" id="navUpBtn" onclick="galleryNavUp()">☁️⬆️💗</div>
+  <div class="gallery-nav-btn nav-down" id="navDownBtn" onclick="galleryNavDown()">💖⬇️🌸</div>
+  <div class="nav-label">💕</div>
+</div>
+
+<!-- Navigasi -->
+<div class="back-btn"   id="backBtn"   style="display:none" onclick="nav(1,0)">← Back</div>
+<div class="next-btn-s2" id="nextBtnS2" style="display:none" onclick="nav(1,2)">Next →</div>
+<div class="next-s3" id="nextS3" onclick="nav(2,3)">Next <span class="arrow-icon">→</span></div>
+
+<!-- Gallery nav dots -->
+<div class="scroll-nav" id="scrollNav">
+  <div class="snav-dot" onclick="navTo(5)" title="1–3"></div>
+  <div class="snav-dot" onclick="navTo(6)" title="4–6"></div>
+  <div class="snav-dot" onclick="navTo(7)" title="7–9"></div>
+  <div class="snav-dot" onclick="navTo(8)" title="10–12"></div>
 </div>
 
 <!-- AUDIO -->
-<audio id="perfect" src="music/perfect.mp3"></audio>
-<audio id="ilysb" src="music/ilysb.mp3"></audio>
-<audio id="iniabadi" src="music/iniabadi.mp3"></audio>
+<audio id="audio-perfect"  src="music/perfect.mp3"></audio>
+<audio id="audio-ilysb"    src="music/ilysb.mp3"></audio>
+<audio id="audio-iniabadi" src="music/iniabadi.mp3"></audio>
 
 <script>
-function goToSlide2(){
-  document.getElementById('slide1').classList.remove('active');
-  setTimeout(()=>document.getElementById('slide2').classList.add('active'),400);
+/* ===== STARS ===== */
+const canvas = document.getElementById('stars-canvas'), ctx = canvas.getContext('2d');
+let stars=[];
+function resizeCanvas(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+function initStars(){ stars=[]; for(let i=0;i<200;i++) stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.4+0.3,speed:Math.random()*.005+.002,phase:Math.random()*Math.PI*2}); }
+function drawStars(t){ ctx.clearRect(0,0,canvas.width,canvas.height); stars.forEach(s=>{ const a=0.3+0.5*Math.abs(Math.sin(t*s.speed+s.phase)); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill(); }); requestAnimationFrame(drawStars); }
+resizeCanvas(); initStars(); requestAnimationFrame(drawStars);
+window.addEventListener('resize',()=>{ resizeCanvas(); initStars(); });
+
+/* ===== GLOBAL HEARTS ===== */
+const heartsLayer=document.getElementById('heartsLayer'), HEARTS=['♥','❤','💕','💗'];
+function spawnHeart(){ const el=document.createElement('span'); el.className='heart'; el.textContent=HEARTS[Math.floor(Math.random()*HEARTS.length)]; el.style.left=Math.random()*100+'vw'; el.style.bottom='-30px'; el.style.fontSize=(10+Math.random()*14)+'px'; const dur=8+Math.random()*6; el.style.animationDuration=dur+'s'; el.style.animationDelay=Math.random()*4+'s'; heartsLayer.appendChild(el); setTimeout(()=>el.remove(),(dur+4)*1000); }
+setInterval(spawnHeart,800);
+
+/* ===== SLIDE 4 DECO ===== */
+const DECO_H=['💗','💕','♥','❤','💖','💝','✦'], DECO_C=['rgba(255,110,196,0.55)','rgba(167,139,250,0.5)','rgba(255,200,240,0.45)','rgba(255,80,160,0.5)'];
+function populateDecoHearts(){ const c=document.getElementById('decoHeartsS4'); c.innerHTML=''; [{l:'6%',b:'12%',s:13,d:7,dy:0},{l:'14%',b:'28%',s:10,d:9,dy:1.5},{l:'4%',b:'55%',s:15,d:8,dy:.8},{l:'10%',b:'72%',s:9,d:11,dy:3},{l:'20%',b:'85%',s:12,d:7.5,dy:2},{l:'88%',b:'10%',s:11,d:9.5,dy:.3},{l:'92%',b:'35%',s:14,d:7,dy:2.2},{l:'85%',b:'60%',s:9,d:10,dy:1},{l:'78%',b:'80%',s:13,d:8,dy:3.5},{l:'95%',b:'75%',s:10,d:12,dy:.6},{l:'35%',b:'5%',s:12,d:8,dy:1.8},{l:'50%',b:'3%',s:9,d:11,dy:4},{l:'65%',b:'8%',s:14,d:7.5,dy:.5},{l:'30%',b:'90%',s:11,d:9,dy:2.7},{l:'55%',b:'88%',s:10,d:8.5,dy:1.2},{l:'70%',b:'92%',s:8,d:10,dy:3.8}].forEach((x,i)=>{ const el=document.createElement('span'); el.className='dh'; el.textContent=DECO_H[i%DECO_H.length]; el.style.left=x.l; el.style.bottom=x.b; el.style.fontSize=x.s+'px'; el.style.animationDuration=x.d+'s'; el.style.animationDelay=x.dy+'s'; el.style.color=DECO_C[i%DECO_C.length]; c.appendChild(el); }); }
+populateDecoHearts();
+
+/* ===== SLIDE SYSTEM dengan ROMANTIC FADE BLUR (CEPAT) ===== */
+const SLIDES=['slide1','slide2','slide3','slide4','slide5','slide6','slide7','slide8','slide9'];
+let cur=0, busy=false, autoT=null, nextT=null;
+
+function nav(from, to){
+  if(busy||to===cur) return;
+  doTransition(from, to);
+}
+function navTo(toIdx){ nav(cur, toIdx); }
+
+function doTransition(fromIdx, toIdx){
+  busy=true;
+  const fromEl=document.getElementById(SLIDES[fromIdx]);
+  const toEl=document.getElementById(SLIDES[toIdx]);
+
+  fromEl.classList.add('exit');
+  
+  setTimeout(() => {
+    fromEl.classList.remove('active', 'exit');
+    toEl.classList.add('active');
+    cur = toIdx;
+    afterEnter(toIdx);
+    busy = false;
+  }, 550);
 }
 
-function goToSlide3(){
-  document.getElementById('slide2').classList.remove('active');
-  setTimeout(()=>{
-    document.getElementById('slide3').classList.add('active');
-
-    setTimeout(()=>{
-      document.getElementById('next3').style.display='block';
-    },3000);
-
-  },400);
+function afterEnter(idx){
+  document.getElementById('backBtn').style.display   = idx===1?'block':'none';
+  document.getElementById('nextBtnS2').style.display = idx===1?'block':'none';
+  clearTimeout(nextT);
+  document.getElementById('nextS3').classList.remove('visible');
+  if(idx===2){ nextT=setTimeout(()=>document.getElementById('nextS3').classList.add('visible'),2000); }
+  if(idx===3) startCountdown();
+  if(idx===4) spawnS5Petals();
+  
+  // Gallery navigation
+  const galleryNav = document.getElementById('galleryNav');
+  if(idx>=5 && idx<=8){
+    spawnGalleryDeco(idx+1);
+    updateDots(idx);
+    document.getElementById('scrollNav').classList.add('visible');
+    galleryNav.classList.remove('hide');
+  } else {
+    document.getElementById('scrollNav').classList.remove('visible');
+    galleryNav.classList.add('hide');
+  }
 }
 
-function playSong(name){
-  let songs=['perfect','ilysb','iniabadi'];
+function updateDots(idx){ document.querySelectorAll('.snav-dot').forEach((d,i)=>d.classList.toggle('act',i===idx-5)); }
 
-  songs.forEach(id=>{
-    let audio=document.getElementById(id);
-    audio.pause();
-    audio.currentTime=0;
-  });
-
-  document.getElementById(name).play();
+/* ===== GALLERY NAVIGATION UP & DOWN ===== */
+function galleryNavUp() {
+  if(busy) return;
+  if(cur >= 6 && cur <= 9) {
+    // ke atas: dari slide 7 ke 6, 8 ke 7, 9 ke 8
+    if(cur > 6) {
+      nav(cur, cur-1);
+    }
+  }
 }
+
+function galleryNavDown() {
+  if(busy) return;
+  if(cur >= 5 && cur <= 8) {
+    // ke bawah: dari slide 6 ke 7, 7 ke 8, 8 ke 9
+    if(cur < 9) {
+      nav(cur, cur+1);
+    }
+  }
+}
+
+/* ===== COUNTDOWN ===== */
+function startCountdown(){ clearTimeout(autoT); const bar=document.getElementById('countdownBar'); bar.style.animation='none'; bar.offsetHeight; bar.style.animation='countdownShrink 30s linear forwards'; autoT=setTimeout(()=>{ if(cur===3) nav(3,4); },30000); }
+function cancelAuto(){ clearTimeout(autoT); }
+
+/* ===== S5 PETALS ===== */
+function spawnS5Petals(){ const layer=document.getElementById('s5PetalLayer'); layer.innerHTML=''; const e=['🌸','✿','❀','·','✦','*']; for(let i=0;i<18;i++){ const el=document.createElement('span'); const dur=7+Math.random()*6,delay=Math.random()*5; const c=['rgba(255,150,200,0.5)','rgba(200,160,255,0.45)','rgba(255,200,230,0.4)']; el.style.cssText=`position:absolute;left:${Math.random()*100}%;bottom:-5%;font-size:${8+Math.random()*12}px;opacity:0;animation:petalRise ${dur}s linear ${delay}s infinite;pointer-events:none;color:${c[Math.floor(Math.random()*c.length)]};`; el.textContent=e[Math.floor(Math.random()*e.length)]; layer.appendChild(el); } }
+
+/* ===== GALLERY DECO ===== */
+function spawnGalleryDeco(n){ const layer=document.getElementById('gdeco'+n); if(!layer) return; layer.innerHTML=''; const e=['💗','💕','✦','🌸','·','°','✿','💖'],c=['rgba(255,110,196,0.4)','rgba(167,139,250,0.38)','rgba(255,180,220,0.35)']; for(let i=0;i<16;i++){ const el=document.createElement('span'); el.className='gdh'; const dur=8+Math.random()*8,delay=Math.random()*6; el.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*12}%;font-size:${8+Math.random()*11}px;animation-duration:${dur}s;animation-delay:${delay}s;color:${c[Math.floor(Math.random()*c.length)]};`; el.textContent=e[Math.floor(Math.random()*e.length)]; layer.appendChild(el); } }
+
+/* ===== MUSIC ===== */
+const songs={perfect:document.getElementById('audio-perfect'),ilysb:document.getElementById('audio-ilysb'),iniabadi:document.getElementById('audio-iniabadi')};
+function playSong(name){ for(let k in songs){ songs[k].pause(); songs[k].currentTime=0; document.getElementById('btn-'+k).textContent='▶ Play'; document.getElementById('card-'+k).classList.remove('activeCard'); } songs[name].play(); document.getElementById('btn-'+name).textContent='⏸ Playing...'; document.getElementById('card-'+name).classList.add('activeCard'); }
+
+// Sembunyikan gallery nav dulu
+document.getElementById('galleryNav').classList.add('hide');
 </script>
-
 </body>
 </html>
